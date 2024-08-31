@@ -1,6 +1,6 @@
 const canvas = document.getElementById('pongCanvas');
 const context = canvas.getContext('2d');
-const sound = new Audio('hit.wav');
+const sound = new Audio('hit.ogg');
 const paddleWidth = 10, paddleHeight = 100, paddleSpeed = 5;
 const ballSize = 10, ballSpeed = 4;
 const paddleOffset = 20;
