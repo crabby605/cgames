@@ -6,7 +6,7 @@ const bird = {
     y: canvas.height / 2,
     width: 40,
     height: 30,
-    gravity: 0.3,
+    gravity: 0.2,
     lift: -10,
     velocity: 0,
     image: new Image(),
@@ -28,7 +28,7 @@ const backgroundImages = {
     night: 'bg_night.png'
 };
 
-bird.image.src = 'bird.png';
+bird.image.src = 'https://www.pngmart.com/files/12/Flappy-Bird-PNG-Image.png';
 
 function drawBackground() {
     const img = new Image();
@@ -81,7 +81,7 @@ function update() {
         return;
     }
 
-    if (frame % 60 === 0) { // Shorter pipe interval
+    if (frame % 100 === 0) { // Shorter pipe interval
         const top = Math.random() * (canvas.height - pipeGap - 100) + 50;
         pipes.push({
             x: canvas.width,
