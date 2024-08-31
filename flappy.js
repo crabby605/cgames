@@ -4,12 +4,12 @@ const context = canvas.getContext('2d');
 const bird = {
     x: 50,
     y: canvas.height / 2,
-    width: 30,
-    height: 30,
-    gravity: 0.6,
-    lift: -12,
+    width: 40, // Adjust size for the image
+    height: 30, // Adjust size for the image
+    gravity: 0.3, // Lower gravity
+    lift: -10,
     velocity: 0,
-    color: '#f1c40f'
+    image: new Image()
 };
 
 const pipes = [];
@@ -27,6 +27,8 @@ const backgroundImages = {
     night: 'bg_night.png'
 };
 
+bird.image.src = 'https://www.pngmart.com/files/12/Flappy-Bird-PNG-Image.png'; // Custom bird image
+
 function setBackground() {
     const now = Date.now();
     if (now - lastBackgroundChange > 5 * 60 * 1000) { // 5 minutes
@@ -41,8 +43,7 @@ function setBackground() {
 }
 
 function drawBird() {
-    context.fillStyle = bird.color;
-    context.fillRect(bird.x, bird.y, bird.width, bird.height);
+    context.drawImage(bird.image, bird.x, bird.y, bird.width, bird.height);
 }
 
 function drawPipe(pipe) {
@@ -73,7 +74,7 @@ function update() {
         return;
     }
 
-    if (frame % 90 === 0) {
+    if (frame % 60 === 0) { // Shorter pipe interval
         const top = Math.random() * (canvas.height - pipeGap - 100) + 50;
         pipes.push({
             x: canvas.width,
