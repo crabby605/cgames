@@ -144,3 +144,4 @@ document.getElementById('restartButton').addEventListener('click', () => {
 });
 
 update();
+console.log("no error");
