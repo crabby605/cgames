@@ -12,21 +12,51 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background-color: #000;
+            background-color: #1a1a1a;
             color: #fff;
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', sans-serif;
             text-align: center;
+        }
+        h1, p {
+            margin: 10px 0;
         }
         #splash {
             display: block;
         }
         #controls {
             display: none;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
         }
         #pongCanvas {
             display: none;
+            background-color: #000;
             border: 2px solid #fff;
             margin-bottom: 20px;
+        }
+        select, button {
+            background-color: #444;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            margin: 10px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        select:focus, button:focus {
+            outline: none;
+            border: 2px solid #888;
+        }
+        #scoreboard {
+            display: flex;
+            justify-content: space-between;
+            width: 800px;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+        #timer {
+            font-size: 18px;
         }
     </style>
 </head>
@@ -54,7 +84,21 @@
                 <option value="hard">Hard</option>
             </select>
         </div>
+        <div id="winCondition">
+            <label for="winConditionSelect">Win Condition: </label>
+            <select id="winConditionSelect">
+                <option value="60s">Most points in 60 seconds</option>
+                <option value="5">First to 5 points</option>
+                <option value="10">First to 10 points</option>
+            </select>
+        </div>
         <button id="startButton">Start Game</button>
+    </div>
+
+    <div id="scoreboard">
+        <div>Player 1: <span id="leftScore">0</span></div>
+        <div id="timer">Time: <span id="timeLeft">60</span>s</div>
+        <div>Player 2: <span id="rightScore">0</span></div>
     </div>
 
     <canvas id="pongCanvas" width="800" height="600"></canvas>
@@ -62,5 +106,3 @@
     <script src="pong.js"></script>
 </body>
 </html>
-
-
