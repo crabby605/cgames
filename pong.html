@@ -13,28 +13,46 @@
             align-items: center;
             height: 100vh;
             background-color: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
         }
-        canvas {
+        #splash {
+            display: block;
+        }
+        #controls {
+            display: none;
+        }
+        #pongCanvas {
+            display: none;
             border: 2px solid #fff;
             margin-bottom: 20px;
-        }
-        #difficulty {
-            color: #fff;
-            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
-    <div id="difficulty">
-        <label for="difficultySelect">Choose Difficulty: </label>
-        <select id="difficultySelect">
-            <option value="easy">Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-        </select>
+    <div id="splash">
+        <h1>Welcome to Classic Pong</h1>
+        <p>Press Enter to start</p>
     </div>
+
+    <div id="controls">
+        <p>Use <strong>W</strong> and <strong>S</strong> keys for the left paddle</p>
+        <p>Use <strong>Up</strong> and <strong>Down</strong> arrow keys for the right paddle</p>
+        <div id="difficulty">
+            <label for="difficultySelect">Choose Difficulty: </label>
+            <select id="difficultySelect">
+                <option value="easy">Easy</option>
+                <option value="medium">Medium</option>
+                <option value="hard">Hard</option>
+            </select>
+        </div>
+        <button id="startButton">Start Game</button>
+    </div>
+
     <canvas id="pongCanvas" width="800" height="600"></canvas>
 
     <script src="pong.js"></script>
 </body>
 </html>
+
