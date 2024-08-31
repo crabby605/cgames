@@ -19,6 +19,26 @@ const pipeSpeed = 2;
 let frame = 0;
 let score = 0;
 let gameOver = false;
+let currentBackground = 'bg.png';
+let lastBackgroundChange = Date.now();
+
+const backgroundImages = {
+    day: 'bg.png',
+    night: 'bg_night.png'
+};
+
+function setBackground() {
+    const now = Date.now();
+    if (now - lastBackgroundChange > 5 * 60 * 1000) { // 5 minutes
+        currentBackground = currentBackground === backgroundImages.day ? backgroundImages.night : backgroundImages.day;
+        lastBackgroundChange = now;
+    }
+    const img = new Image();
+    img.src = currentBackground;
+    img.onload = () => {
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+}
 
 function drawBird() {
     context.fillStyle = bird.color;
@@ -40,6 +60,8 @@ function drawScore() {
 
 function update() {
     if (gameOver) return;
+
+    setBackground();
 
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
@@ -80,6 +102,7 @@ function update() {
     });
 
     context.clearRect(0, 0, canvas.width, canvas.height);
+    setBackground();
     drawBird();
     pipes.forEach(drawPipe);
     drawScore();
@@ -101,6 +124,7 @@ document.getElementById('restartButton').addEventListener('click', () => {
     bird.y = canvas.height / 2;
     bird.velocity = 0;
     document.getElementById('gameOver').style.display = 'none';
+    lastBackgroundChange = Date.now(); // Reset background change timer
     update();
 });
 
