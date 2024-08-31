@@ -8,6 +8,7 @@
         body {
             margin: 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
             height: 100vh;
@@ -15,10 +16,23 @@
         }
         canvas {
             border: 2px solid #fff;
+            margin-bottom: 20px;
+        }
+        #difficulty {
+            color: #fff;
+            margin-bottom: 10px;
         }
     </style>
 </head>
 <body>
+    <div id="difficulty">
+        <label for="difficultySelect">Choose Difficulty: </label>
+        <select id="difficultySelect">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+        </select>
+    </div>
     <canvas id="pongCanvas" width="800" height="600"></canvas>
 
     <script src="pong.js"></script>
