@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #70c5ce;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        #gameCanvas {
+            border: 2px solid #fff;
+        }
+        #gameOver {
+            display: none;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 24px;
+            text-align: center;
+        }
+        #restartButton {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #444;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+        }
+        #restartButton:hover {
+            background-color: #666;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <div id="gameOver">
+        <h2>Game Over</h2>
+        <p>Score: <span id="score"></span></p>
+        <button id="restartButton">Restart</button>
+    </div>
+    <script src="flappy.js"></script>
+</body>
+</html>
