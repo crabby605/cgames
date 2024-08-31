@@ -6,7 +6,7 @@ const bird = {
     y: canvas.height / 2,
     width: 40,
     height: 30,
-    gravity: 0.2,
+    gravity: 0.4,
     lift: -10,
     velocity: 0,
     image: new Image(),
