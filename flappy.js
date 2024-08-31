@@ -4,12 +4,13 @@ const context = canvas.getContext('2d');
 const bird = {
     x: 50,
     y: canvas.height / 2,
-    width: 40, // Adjust size for the image
-    height: 30, // Adjust size for the image
-    gravity: 0.3, // Lower gravity
+    width: 40,
+    height: 30,
+    gravity: 0.3,
     lift: -10,
     velocity: 0,
-    image: new Image()
+    image: new Image(),
+    isFalling: false
 };
 
 const pipes = [];
@@ -27,7 +28,15 @@ const backgroundImages = {
     night: 'bg_night.png'
 };
 
-bird.image.src = 'https://www.pngmart.com/files/12/Flappy-Bird-PNG-Image.png'; // Custom bird image
+bird.image.src = 'bird.png';
+
+function drawBackground() {
+    const img = new Image();
+    img.src = currentBackground;
+    img.onload = () => {
+        context.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+}
 
 function setBackground() {
     const now = Date.now();
@@ -35,11 +44,7 @@ function setBackground() {
         currentBackground = currentBackground === backgroundImages.day ? backgroundImages.night : backgroundImages.day;
         lastBackgroundChange = now;
     }
-    const img = new Image();
-    img.src = currentBackground;
-    img.onload = () => {
-        context.drawImage(img, 0, 0, canvas.width, canvas.height);
-    };
+    drawBackground();
 }
 
 function drawBird() {
@@ -62,9 +67,11 @@ function drawScore() {
 function update() {
     if (gameOver) return;
 
-    setBackground();
+    setBackground(); // Draw background first
 
-    bird.velocity += bird.gravity;
+    if (bird.isFalling) {
+        bird.velocity += bird.gravity;
+    }
     bird.y += bird.velocity;
 
     if (bird.y + bird.height > canvas.height || bird.y < 0) {
@@ -103,7 +110,7 @@ function update() {
     });
 
     context.clearRect(0, 0, canvas.width, canvas.height);
-    setBackground();
+    setBackground(); // Redraw background
     drawBird();
     pipes.forEach(drawPipe);
     drawScore();
@@ -114,8 +121,14 @@ function update() {
 
 document.addEventListener('keydown', (event) => {
     if (event.key === ' ') {
+        bird.isFalling = true;
         bird.velocity = bird.lift;
     }
+});
+
+document.addEventListener('mousedown', () => {
+    bird.isFalling = true;
+    bird.velocity = bird.lift;
 });
 
 document.getElementById('restartButton').addEventListener('click', () => {
@@ -124,6 +137,7 @@ document.getElementById('restartButton').addEventListener('click', () => {
     pipes.length = 0;
     bird.y = canvas.height / 2;
     bird.velocity = 0;
+    bird.isFalling = false;
     document.getElementById('gameOver').style.display = 'none';
     lastBackgroundChange = Date.now(); // Reset background change timer
     update();
