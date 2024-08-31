@@ -2,7 +2,7 @@ const canvas = document.getElementById('pongCanvas');
 const context = canvas.getContext('2d');
 const sound = new Audio('hit.wav');
 const paddleWidth = 10, paddleHeight = 100, paddleSpeed = 5;
-const ballRadius = 10, ballSpeed = 4;
+const ballSize = 10, ballSpeed = 4;
 const paddleOffset = 20;
 let leftPaddleY = canvas.height / 2 - paddleHeight / 2;
 let rightPaddleY = canvas.height / 2 - paddleHeight / 2;
@@ -14,10 +14,9 @@ let leftPaddleMoveUp = false, leftPaddleMoveDown = false;
 let rightPaddleMoveUp = false, rightPaddleMoveDown = false;
 let mode = 'ai';
 let difficulty = 'easy';
-let winCondition = '60s';
-let leftScore = 0, rightScore = 0;
-let gameOver = false;
-let gameInterval, timerInterval;
+let gameDuration = 60; // Default to 60 seconds
+let player1Score = 0, player2Score = 0;
+let gameStartTime = 0;
 
 function drawPaddle(x, y) {
     context.fillStyle = "#fff";
@@ -27,30 +26,17 @@ function drawPaddle(x, y) {
 function drawBall() {
     context.fillStyle = "#fff";
     context.beginPath();
-    context.arc(ballX, ballY, ballRadius, 0, Math.PI * 2);
+    context.arc(ballX, ballY, ballSize, 0, Math.PI * 2);
     context.fill();
     context.closePath();
 }
 
-function updateScore() {
-    document.getElementById('leftScore').textContent = leftScore;
-    document.getElementById('rightScore').textContent = rightScore;
-}
-
-function checkWin() {
-    if (winCondition === '60s') return;
-    if (leftScore >= winCondition) {
-        endGame('Player 1 wins!');
-    } else if (rightScore >= winCondition) {
-        endGame('Player 2 wins!');
-    }
-}
-
-function endGame(message) {
-    gameOver = true;
-    clearInterval(gameInterval);
-    clearInterval(timerInterval);
-    setTimeout(() => alert(message), 100);
+function drawScore() {
+    context.fillStyle = "#fff";
+    context.font = "20px Arial";
+    context.textAlign = "center";
+    context.fillText("Player 1: " + player1Score, canvas.width / 4, 30);
+    context.fillText("Player 2: " + player2Score, canvas.width * 3 / 4, 30);
 }
 
 function update() {
@@ -69,29 +55,31 @@ function update() {
     ballX += ballVelocityX;
     ballY += ballVelocityY;
 
-    if (ballY <= ballRadius || ballY >= canvas.height - ballRadius) {
+    if (ballY <= 0 || ballY >= canvas.height) {
         ballVelocityY = -ballVelocityY;
         sound.play();
     }
 
     if (
         (ballX <= paddleOffset + paddleWidth && ballY >= leftPaddleY && ballY <= leftPaddleY + paddleHeight) ||
-        (ballX >= canvas.width - paddleOffset - paddleWidth && ballY >= rightPaddleY && ballY <= rightPaddleY + paddleHeight)
+        (ballX >= canvas.width - paddleOffset - paddleWidth - ballSize && ballY >= rightPaddleY && ballY <= rightPaddleY + paddleHeight)
     ) {
         ballVelocityX = -ballVelocityX;
         sound.play();
     }
 
     if (ballX < 0) {
-        rightScore++;
+        player2Score++;
         resetBall();
-        updateScore();
-        checkWin();
-    } else if (ballX > canvas.width) {
-        leftScore++;
+    }
+    if (ballX > canvas.width) {
+        player1Score++;
         resetBall();
-        updateScore();
-        checkWin();
+    }
+
+    const elapsedTime = (Date.now() - gameStartTime) / 1000;
+    if (elapsedTime >= gameDuration) {
+        endGame();
     }
 }
 
@@ -102,27 +90,21 @@ function resetBall() {
     ballVelocityY = ballSpeed;
 }
 
-function gameLoop() {
-    if (!gameOver) {
-        context.clearRect(0, 0, canvas.width, canvas.height);
-        drawPaddle(paddleOffset, leftPaddleY);
-        drawPaddle(canvas.width - paddleOffset - paddleWidth, rightPaddleY);
-        drawBall();
-        update();
-        requestAnimationFrame(gameLoop);
-    }
+function endGame() {
+    document.getElementById('pongCanvas').style.display = 'none';
+    document.getElementById('gameOver').style.display = 'block';
+    document.getElementById('player1Score').textContent = player1Score;
+    document.getElementById('player2Score').textContent = player2Score;
 }
 
-function startTimer(duration) {
-    let timeLeft = duration;
-    document.getElementById('timeLeft').textContent = timeLeft;
-    timerInterval = setInterval(() => {
-        timeLeft--;
-        document.getElementById('timeLeft').textContent = timeLeft;
-        if (timeLeft <= 0) {
-            endGame(leftScore > rightScore ? 'Player 1 wins!' : rightScore > leftScore ? 'Player 2 wins!' : 'It\'s a tie!');
-        }
-    }, 1000);
+function gameLoop() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawPaddle(paddleOffset, leftPaddleY);
+    drawPaddle(canvas.width - paddleOffset - paddleWidth, rightPaddleY);
+    drawBall();
+    drawScore();
+    update();
+    requestAnimationFrame(gameLoop);
 }
 
 document.addEventListener('keydown', (event) => {
@@ -133,5 +115,24 @@ document.addEventListener('keydown', (event) => {
 });
 
 document.getElementById('startButton').addEventListener('click', () => {
-    mode = document.getElementById('mode
+    mode = document.getElementById('modeSelect').value;
+    difficulty = document.getElementById('difficultySelect').value;
+    gameDuration = parseInt(document.getElementById('timerSelect').value);
+    player1Score = 0;
+    player2Score = 0;
+    gameStartTime = Date.now();
+    document.getElementById('controls').style.display = 'none';
+    document.getElementById('pongCanvas').style.display = 'block';
+    gameLoop();
+});
 
+document.getElementById('restartButton').addEventListener('click', () => {
+    document.getElementById('gameOver').style.display = 'none';
+    document.getElementById('splash').style.display = 'block';
+});
+
+document.addEventListener('keydown', (event) => {
+    switch (event.key) {
+        case 'w':
+            leftPaddleMoveUp = true;
+           
